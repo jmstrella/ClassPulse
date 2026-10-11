@@ -4,6 +4,7 @@ import { useCheckins } from './useCheckins';
 import { LivePanel } from './LivePanel';
 import { HistoryList } from './HistoryList';
 import { isCheckinOpen } from './helpers';
+import { Clock, Lock, AlertCircle, Loader2 } from 'lucide-react';
 
 export default function Checkins() {
   const { session, participants, settings } = useSessionContext();
@@ -41,12 +42,12 @@ export default function Checkins() {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Top Header & Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-gray-200 gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <span>Check-in Prompts</span>
+          <h1 className="text-xl font-bold tracking-tight text-slate-900">
+            Check-in Prompts
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-slate-500 mt-1">
             Prompt students during class to confirm they are actively attending and engaged.
           </p>
         </div>
@@ -57,10 +58,10 @@ export default function Checkins() {
             id="send-checkin-btn"
             onClick={handleSendCheckin}
             disabled={isSendDisabled}
-            className={`inline-flex items-center justify-center px-4 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-sm ${
+            className={`inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-semibold transition-all shadow-xs ${
               isSendDisabled
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
-                : 'bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer active:scale-95'
+                ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
+                : 'bg-slate-900 hover:bg-slate-800 text-white cursor-pointer active:scale-95 transition-colors'
             }`}
             title={
               isSessionEnded
@@ -72,43 +73,21 @@ export default function Checkins() {
           >
             {sending ? (
               <>
-                <svg
-                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  />
-                </svg>
+                <Loader2 className="animate-spin -ml-1 mr-2 h-4 w-4" />
                 <span>Sending...</span>
               </>
             ) : isOpen ? (
               <>
-                <span className="mr-1.5">⏳</span>
+                <Clock className="w-4 h-4 mr-1.5" />
                 <span>Check-in Open</span>
               </>
             ) : isSessionEnded ? (
               <>
-                <span className="mr-1.5">🔒</span>
+                <Lock className="w-3.5 h-3.5 mr-1.5 text-slate-400" />
                 <span>Session Ended</span>
               </>
             ) : (
-              <>
-                <span className="mr-1.5">⚡</span>
-                <span>Send check-in</span>
-              </>
+              <span>Send check-in</span>
             )}
           </button>
         </div>
@@ -116,15 +95,15 @@ export default function Checkins() {
 
       {/* Error State */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center justify-between text-sm text-red-800">
+        <div className="bg-rose-50 border border-rose-200 rounded-lg p-4 flex items-center justify-between text-sm text-rose-800">
           <div className="flex items-center gap-2">
-            <span>⚠️</span>
+            <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
             <span>{error}</span>
           </div>
           <button
             type="button"
             onClick={refresh}
-            className="text-xs font-semibold underline hover:text-red-950 cursor-pointer ml-4"
+            className="text-xs font-semibold underline hover:text-rose-950 cursor-pointer ml-4"
           >
             Retry
           </button>
@@ -133,16 +112,15 @@ export default function Checkins() {
 
       {/* Loading State */}
       {loading ? (
-        <div className="bg-white border border-gray-200 rounded-xl p-12 text-center shadow-sm">
-          <div className="inline-block animate-spin text-2xl mb-3">⏳</div>
-          <p className="text-sm font-medium text-gray-600">Loading check-in data...</p>
+        <div className="bg-white border border-slate-200 rounded-xl p-12 text-center shadow-xs">
+          <Loader2 className="w-6 h-6 animate-spin text-slate-400 mx-auto mb-3" />
+          <p className="text-sm font-medium text-slate-500">Loading check-in data...</p>
         </div>
       ) : checkins.length === 0 ? (
         /* Empty State */
-        <div className="bg-white border border-dashed border-gray-300 rounded-xl p-12 text-center shadow-sm">
-          <div className="text-4xl mb-3">💬</div>
-          <h2 className="text-lg font-bold text-gray-800 mb-2">No check-ins sent yet</h2>
-          <p className="text-sm text-gray-500 max-w-md mx-auto mb-6">
+        <div className="bg-white border border-dashed border-slate-200 rounded-xl p-12 text-center shadow-xs">
+          <h2 className="text-lg font-bold tracking-tight text-slate-900 mb-1">No check-ins sent yet</h2>
+          <p className="text-sm text-slate-500 max-w-md mx-auto mb-6">
             Click &quot;Send check-in&quot; to prompt all active students in this session. Their responses
             and response times will update right here in real time.
           </p>
@@ -150,13 +128,13 @@ export default function Checkins() {
             type="button"
             onClick={handleSendCheckin}
             disabled={isSendDisabled}
-            className={`inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-semibold transition shadow-sm ${
+            className={`inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium transition shadow-xs ${
               isSendDisabled
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
-                : 'bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer active:scale-95'
+                ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
+                : 'bg-slate-900 hover:bg-slate-800 text-white cursor-pointer active:scale-95 transition-colors'
             }`}
           >
-            {isSessionEnded ? 'Session Ended' : '⚡ Send first check-in'}
+            {isSessionEnded ? 'Session Ended' : 'Send first check-in'}
           </button>
         </div>
       ) : (

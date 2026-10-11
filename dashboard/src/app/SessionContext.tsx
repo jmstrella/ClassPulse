@@ -88,9 +88,16 @@ export const SessionProvider = ({ sessionId, children }: { sessionId: string; ch
   }, [sessionId]);
 
   useEffect(() => {
+    if (session?.status === 'ended') {
+      if (session.ended_at) {
+        setNow(new Date(session.ended_at));
+      }
+      return;
+    }
+
     const interval = setInterval(() => setNow(new Date()), 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [session?.status, session?.ended_at]);
 
   const settings = session ? resolveSettings(session.settings) : resolveSettings({});
   const rows = buildBoardRows(roster, participants, settings, now);

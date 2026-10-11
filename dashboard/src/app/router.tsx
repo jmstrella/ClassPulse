@@ -8,6 +8,15 @@ import { AuthProvider } from './AuthProvider';
 
 export const router = createBrowserRouter([
   {
+    // Login lives outside AppLayout so the navbar is never rendered on it
+    path: '/login',
+    element: (
+      <AuthProvider>
+        <LoginPage />
+      </AuthProvider>
+    ),
+  },
+  {
     element: (
       <AuthProvider>
         <AppLayout />
@@ -15,7 +24,6 @@ export const router = createBrowserRouter([
     ),
     children: [
       { path: '/', element: <Navigate to="/sessions" replace /> },
-      { path: '/login', element: <LoginPage /> },
       {
         path: '/sessions',
         element: <ProtectedRoute />,

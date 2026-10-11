@@ -24,9 +24,9 @@ export function getStatus(p: Participant, settings: Settings, now: Date): Partic
 }
 
 export const STATUS_META: Record<Status, { label: string; icon: string; classes: string }> = {
-  offline: { label: 'Offline', icon: '🔴', classes: 'bg-red-100 text-red-800 border-red-200' },
-  distracted: { label: 'Distracted', icon: '⚠️', classes: 'bg-orange-100 text-orange-800 border-orange-200' },
-  idle: { label: 'Idle', icon: '🌙', classes: 'bg-yellow-100 text-yellow-800 border-yellow-200' },
-  active: { label: 'Active', icon: '✅', classes: 'bg-green-100 text-green-800 border-green-200' },
-  not_joined: { label: 'Not joined', icon: '⚪', classes: 'bg-gray-100 text-gray-500 border-gray-200' }
+  offline: { label: 'Offline', icon: '•', classes: 'bg-rose-50 text-rose-700 border-rose-200' },
+  distracted: { label: 'Distracted', icon: '•', classes: 'bg-amber-50 text-amber-700 border-amber-200' },
+  idle: { label: 'Idle', icon: '•', classes: 'bg-slate-50 text-slate-600 border-slate-200' },
+  active: { label: 'Active', icon: '•', classes: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+  not_joined: { label: 'Not joined', icon: '•', classes: 'bg-slate-50 text-slate-500 border-slate-200' }
 };

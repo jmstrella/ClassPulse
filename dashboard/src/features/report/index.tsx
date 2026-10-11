@@ -11,6 +11,7 @@ import {
 } from './logic';
 import type { SessionReportRow, SortField, SortDirection } from './logic';
 import { buildCsv, getFilename, downloadCsv } from './csv';
+import { RotateCw, Download, AlertCircle, BarChart3 } from 'lucide-react';
 
 export default function Report() {
   const { session } = useSessionContext();
@@ -84,14 +85,14 @@ export default function Report() {
       </div>
 
       <div className="flex items-center gap-2">
-        {error && <span className="text-xs text-red-500">Refresh failed</span>}
+        {error && <span className="text-xs text-rose-500 font-medium">Refresh failed</span>}
         <button
           onClick={fetchReport}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-gray-300 bg-white text-xs font-semibold text-gray-700 hover:bg-gray-50 shadow-sm transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
         >
-          <span className={loading ? 'animate-spin inline-block' : ''}>🔄</span>
-          {loading ? 'Refreshing…' : 'Refresh'}
+          <RotateCw className={`w-3.5 h-3.5 text-slate-500 ${loading ? 'animate-spin' : ''}`} />
+          <span>{loading ? 'Refreshing…' : 'Refresh'}</span>
         </button>
         <button
           onClick={() => {
@@ -103,9 +104,10 @@ export default function Report() {
             downloadCsv(csv, filename);
           }}
           disabled={rows.length === 0}
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border border-emerald-300 bg-emerald-50 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 shadow-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-xs transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
         >
-          ⬇ Export CSV
+          <Download className="w-3.5 h-3.5 text-slate-500" />
+          <span>Export CSV</span>
         </button>
       </div>
     </div>
@@ -116,8 +118,8 @@ export default function Report() {
       <div className="space-y-6">
         {statusBanner}
         <div className="flex flex-col items-center justify-center p-16 text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-indigo-500 border-t-transparent mb-4" />
-          <p className="text-gray-500 font-medium">Generating session report…</p>
+          <div className="inline-block animate-spin rounded-full h-7 w-7 border-2 border-slate-900 border-t-transparent mb-4" />
+          <p className="text-slate-500 font-medium text-sm">Generating session report…</p>
         </div>
       </div>
     );
@@ -127,13 +129,13 @@ export default function Report() {
     return (
       <div className="space-y-6">
         {statusBanner}
-        <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-center">
-          <div className="text-3xl mb-2">⚠️</div>
-          <h3 className="text-lg font-semibold text-red-800 mb-1">Failed to generate report</h3>
-          <p className="text-sm text-red-600 mb-4">{error}</p>
+        <div className="rounded-xl border border-rose-200 bg-rose-50 p-6 text-center">
+          <AlertCircle className="w-8 h-8 text-rose-500 mx-auto mb-2" />
+          <h3 className="text-base font-semibold text-rose-900 mb-1">Failed to generate report</h3>
+          <p className="text-sm text-rose-600 mb-4">{error}</p>
           <button
             onClick={fetchReport}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-red-600 hover:bg-red-700 shadow-sm transition-colors"
+            className="inline-flex items-center px-3.5 py-1.5 border border-transparent text-xs font-medium rounded-lg text-white bg-rose-600 hover:bg-rose-700 shadow-xs transition-colors cursor-pointer"
           >
             Retry
           </button>
@@ -146,10 +148,10 @@ export default function Report() {
     return (
       <div className="space-y-6">
         {statusBanner}
-        <div className="flex flex-col items-center justify-center p-16 text-center bg-white rounded-xl border border-gray-200 shadow-sm">
-          <div className="text-4xl mb-3">📊</div>
-          <h3 className="text-lg font-bold text-gray-800 mb-1">No attendance records yet</h3>
-          <p className="text-sm text-gray-500 max-w-sm">
+        <div className="flex flex-col items-center justify-center p-16 text-center bg-white rounded-xl border border-slate-200 shadow-xs">
+          <BarChart3 className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+          <h3 className="text-base font-bold tracking-tight text-slate-900 mb-1">No attendance records yet</h3>
+          <p className="text-sm text-slate-500 max-w-sm">
             Once students join and heartbeats are recorded, full attendance breakdown and check-in
             stats will appear here.
           </p>
@@ -178,7 +180,7 @@ export default function Report() {
 
         <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-xs">
           <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Avg Attendance</span>
-          <div className="text-2xl font-black text-indigo-600 mt-1">
+          <div className="text-2xl font-black text-[#E11D2E] mt-1">
             {formatPercentage(summary.avgAttendancePct)}
           </div>
           <span className="text-xs text-gray-400">across whole roster</span>
@@ -194,7 +196,7 @@ export default function Report() {
 
         <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-xs col-span-2 md:col-span-1">
           <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Check-in Rate</span>
-          <div className="text-2xl font-black text-purple-600 mt-1">
+          <div className="text-2xl font-black text-[#111827] mt-1">
             {formatPercentage(summary.checkinResponseRatePct)}
           </div>
           <span className="text-xs text-gray-400">response rate</span>
@@ -209,20 +211,20 @@ export default function Report() {
             <p className="text-xs text-gray-500">Click column headers to sort.</p>
           </div>
           <div className="flex items-center gap-3 text-xs text-gray-600">
-            <span className="flex items-center gap-1">
-              <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500" />
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
               {STATUS_META.active.label}
             </span>
-            <span className="flex items-center gap-1">
-              <span className="inline-block w-2.5 h-2.5 rounded-full bg-amber-500" />
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block w-2 h-2 rounded-full bg-amber-500" />
               {STATUS_META.distracted.label}
             </span>
-            <span className="flex items-center gap-1">
-              <span className="inline-block w-2.5 h-2.5 rounded-full bg-yellow-400" />
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block w-2 h-2 rounded-full bg-slate-400" />
               {STATUS_META.idle.label}
             </span>
-            <span className="flex items-center gap-1">
-              <span className="inline-block w-2.5 h-2.5 rounded-full bg-rose-500" />
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block w-2 h-2 rounded-full bg-rose-500" />
               {STATUS_META.offline.label}
             </span>
           </div>
@@ -272,7 +274,7 @@ export default function Report() {
                       </div>
                     </td>
 
-                    <td className="py-3 px-3 text-right font-semibold">
+                    <td className="py-3 px-3 text-right font-semibold tabular-nums">
                       {row.joined ? (
                         <span className={row.attendance_pct >= 80 ? 'text-emerald-600' : row.attendance_pct >= 50 ? 'text-amber-600' : 'text-rose-600'}>
                           {formatPercentage(row.attendance_pct)}
@@ -280,16 +282,16 @@ export default function Report() {
                       ) : <span className="text-gray-300">—</span>}
                     </td>
 
-                    <td className="py-3 px-3 text-right text-gray-600 font-mono">
+                    <td className="py-3 px-3 text-right text-gray-600 font-sans font-semibold tabular-nums">
                       {row.joined ? formatDuration(row.active_seconds) : '—'}
                     </td>
-                    <td className="py-3 px-3 text-right text-gray-600 font-mono">
+                    <td className="py-3 px-3 text-right text-gray-600 font-sans font-semibold tabular-nums">
                       {row.joined ? formatDuration(row.distracted_seconds) : '—'}
                     </td>
-                    <td className="py-3 px-3 text-right text-gray-600 font-mono">
+                    <td className="py-3 px-3 text-right text-gray-600 font-sans font-semibold tabular-nums">
                       {row.joined ? formatDuration(row.idle_seconds) : '—'}
                     </td>
-                    <td className="py-3 px-3 text-right text-gray-600 font-mono">
+                    <td className="py-3 px-3 text-right text-gray-600 font-sans font-semibold tabular-nums">
                       {row.joined ? formatDuration(row.offline_seconds) : '—'}
                     </td>
 
@@ -301,7 +303,7 @@ export default function Report() {
                         >
                           {shares.active > 0 && <div style={{ width: `${shares.active}%` }} className="bg-emerald-500 h-full" />}
                           {shares.distracted > 0 && <div style={{ width: `${shares.distracted}%` }} className="bg-amber-500 h-full" />}
-                          {shares.idle > 0 && <div style={{ width: `${shares.idle}%` }} className="bg-yellow-400 h-full" />}
+                          {shares.idle > 0 && <div style={{ width: `${shares.idle}%` }} className="bg-slate-400 h-full" />}
                           {shares.offline > 0 && <div style={{ width: `${shares.offline}%` }} className="bg-rose-500 h-full" />}
                         </div>
                       ) : (
