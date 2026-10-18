@@ -5,7 +5,6 @@ import {
   formatPercent,
   formatSeconds
 } from './helpers';
-import { History } from 'lucide-react';
 
 interface HistoryListProps {
   earlierCheckins: Checkin[];
@@ -21,7 +20,6 @@ export function HistoryList({
   return (
     <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs">
       <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
-        <History className="w-4 h-4 text-slate-500" />
         <h2 className="text-base font-bold tracking-tight text-slate-900">Earlier Check-ins</h2>
         <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-sans tabular-nums">
           {earlierCheckins.length}
@@ -70,7 +68,7 @@ export function HistoryList({
                     <div className="text-[11px] uppercase font-bold text-gray-400 tracking-wider">
                       Response Rate
                     </div>
-                    <div className="font-bold text-[#E11D2E] tabular-nums">{formatPercent(rate)}</div>
+                    <div className="font-bold text-[#E11D2E] font-sans tabular-nums">{formatPercent(rate)}</div>
                   </div>
 
                   {/* Median Response Time */}
@@ -78,7 +76,7 @@ export function HistoryList({
                     <div className="text-[11px] uppercase font-bold text-gray-400 tracking-wider">
                       Median Time
                     </div>
-                    <div className="font-bold text-gray-700">{formatSeconds(medianSec)}</div>
+                    <div className="font-bold text-gray-700 font-sans tabular-nums">{formatSeconds(medianSec)}</div>
                   </div>
                 </div>
               </div>

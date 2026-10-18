@@ -7,7 +7,7 @@ import {
   formatCountdown,
   calculateResponseRate
 } from './helpers';
-import { Radio, Clock, Check } from 'lucide-react';
+import { Clock, Check } from 'lucide-react';
 
 interface LivePanelProps {
   latestCheckin: Checkin;
@@ -60,7 +60,6 @@ export function LivePanel({ latestCheckin, responses, participants, settings, no
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <Radio className="w-4 h-4 text-emerald-600" />
             <h2 className="text-base font-bold tracking-tight text-slate-900">Latest Check-in</h2>
             {isOpen ? (
               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
@@ -96,7 +95,7 @@ export function LivePanel({ latestCheckin, responses, participants, settings, no
       {/* Progress Bar */}
       <div className="mt-5 mb-6">
         <div className="flex justify-between items-center text-sm mb-2">
-          <span className="font-medium text-gray-800">
+          <span className="font-medium text-gray-800 font-sans tabular-nums">
             <strong>{X}</strong> of <strong>{Y}</strong> students responded
           </span>
           <span className="text-xs font-bold font-sans tabular-nums text-gray-500">
@@ -158,7 +157,7 @@ export function LivePanel({ latestCheckin, responses, participants, settings, no
                     {resp ? (
                       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                         <Check className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>
+                        <span className="font-sans tabular-nums">
                           Responded (
                           {calculateResponseTimeSeconds(latestCheckin.sent_at, resp.responded_at)}s)
                         </span>

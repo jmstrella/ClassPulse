@@ -19,11 +19,8 @@ import {
   Save,
   AlertTriangle,
   CheckCircle2,
-  Info,
-  Sparkles,
-  Users,
-  Eye,
-  Clock
+  HelpCircle,
+  Users
 } from 'lucide-react';
 
 interface FormState {
@@ -271,12 +268,9 @@ export default function SettingsView() {
       {/* Presets Bar */}
       <div className="bg-slate-50/70 border border-slate-200 rounded-2xl p-5 shadow-xs">
         <div className="flex items-center justify-between mb-3.5">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-red-600" />
-            <h3 className="text-sm font-semibold text-slate-900">Quick Presets</h3>
-          </div>
+          <h3 className="text-sm font-semibold text-slate-900">Quick Presets</h3>
           {activePreset && (
-            <span className="text-xs text-red-700 bg-red-50 border border-red-200 px-2.5 py-0.5 rounded-full font-medium">
+            <span className="text-xs text-red-700 bg-red-50 border border-red-200 px-2.5 py-0.5 rounded-full font-medium font-sans tabular-nums">
               Preset active: {activePreset.name}
             </span>
           )}
@@ -300,12 +294,11 @@ export default function SettingsView() {
                   <span className={`text-sm font-semibold ${isSelected ? 'text-red-700' : 'text-slate-900'}`}>
                     {preset.name}
                   </span>
-                  {isSelected && <span className="text-[10px] uppercase font-bold tracking-wider text-red-600">Selected</span>}
                 </div>
                 <p className="text-xs text-slate-500 mt-1 leading-relaxed">
                   {preset.description}
                 </p>
-                <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center gap-3 text-[11px] text-slate-600 font-mono">
+                <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center gap-3 text-[11px] text-slate-600 font-sans tabular-nums">
                   <span>Distracted: {preset.values.distracted_after_seconds}s</span>
                   <span>•</span>
                   <span>Idle: {preset.values.idle_after_seconds}s</span>
@@ -320,16 +313,21 @@ export default function SettingsView() {
 
       {/* Main Settings Form Inputs */}
       <div className="bg-slate-50/40 border border-slate-200 rounded-2xl p-6 shadow-xs space-y-5">
-        <h3 className="text-base font-semibold text-slate-900 flex items-center gap-2">
-          <Clock className="w-4 h-4 text-slate-600" />
+        <h3 className="text-base font-semibold text-slate-900">
           Threshold Configuration
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Distracted */}
           <div className="space-y-2">
-            <label htmlFor="distracted_after_seconds" className="block text-sm font-medium text-slate-900">
+            <label htmlFor="distracted_after_seconds" className="flex items-center gap-1.5 text-sm font-medium text-slate-900">
               Mark as Distracted after
+              <span className="relative group">
+                <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
+                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-2 rounded-lg bg-slate-900 text-[11px] text-white leading-relaxed shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-20">
+                  Mark a student distracted if they switch away from the Google Meet tab. Default: 60s (Range: 15–600s).
+                </span>
+              </span>
             </label>
             <div className="relative rounded-xl shadow-xs">
               <input
@@ -340,20 +338,14 @@ export default function SettingsView() {
                 step="1"
                 value={formValues.distracted_after_seconds}
                 onChange={handleInputChange('distracted_after_seconds')}
-                className={`w-full rounded-xl py-2.5 px-3.5 text-sm border font-mono bg-white ${
+                className={`w-full rounded-xl py-2.5 px-3.5 text-sm font-sans tabular-nums bg-white outline-none transition-all ${
                   validation.errors.distracted_after_seconds
-                    ? 'border-rose-300 text-rose-900 focus:ring-rose-500 focus:border-rose-500 bg-rose-50/20'
-                    : 'border-slate-300 text-slate-900 focus:ring-red-500 focus:border-red-500'
+                    ? 'border border-rose-300 text-rose-900 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 bg-rose-50/20'
+                    : 'border border-slate-200 text-slate-900 focus:border-slate-400 focus:ring-2 focus:ring-slate-100 hover:border-slate-300'
                 }`}
                 placeholder="60"
               />
-              <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-xs text-slate-400">
-                seconds away
-              </div>
             </div>
-            <p className="text-xs text-slate-500">
-              Seconds away from the Google Meet tab (15–600s). Default: 60s.
-            </p>
             {validation.errors.distracted_after_seconds && (
               <p className="text-xs text-rose-600 flex items-center gap-1 font-medium">
                 <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
@@ -364,8 +356,14 @@ export default function SettingsView() {
 
           {/* Idle */}
           <div className="space-y-2">
-            <label htmlFor="idle_after_seconds" className="block text-sm font-medium text-slate-900">
+            <label htmlFor="idle_after_seconds" className="flex items-center gap-1.5 text-sm font-medium text-slate-900">
               Mark as Idle after
+              <span className="relative group">
+                <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
+                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-2 rounded-lg bg-slate-900 text-[11px] text-white leading-relaxed shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-20">
+                  Mark a student idle if no mouse or keyboard activity is detected. Default: 180s (Range: 60–1800s).
+                </span>
+              </span>
             </label>
             <div className="relative rounded-xl shadow-xs">
               <input
@@ -376,20 +374,14 @@ export default function SettingsView() {
                 step="1"
                 value={formValues.idle_after_seconds}
                 onChange={handleInputChange('idle_after_seconds')}
-                className={`w-full rounded-xl py-2.5 px-3.5 text-sm border font-mono bg-white ${
+                className={`w-full rounded-xl py-2.5 px-3.5 text-sm font-sans tabular-nums bg-white outline-none transition-all ${
                   validation.errors.idle_after_seconds
-                    ? 'border-rose-300 text-rose-900 focus:ring-rose-500 focus:border-rose-500 bg-rose-50/20'
-                    : 'border-slate-300 text-slate-900 focus:ring-red-500 focus:border-red-500'
+                    ? 'border border-rose-300 text-rose-900 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 bg-rose-50/20'
+                    : 'border border-slate-200 text-slate-900 focus:border-slate-400 focus:ring-2 focus:ring-slate-100 hover:border-slate-300'
                 }`}
                 placeholder="180"
               />
-              <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-xs text-slate-400">
-                seconds idle
-              </div>
             </div>
-            <p className="text-xs text-slate-500">
-              Seconds without mouse/keyboard input (60–1800s). Default: 180s.
-            </p>
             {validation.errors.idle_after_seconds && (
               <p className="text-xs text-rose-600 flex items-center gap-1 font-medium">
                 <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
@@ -400,8 +392,14 @@ export default function SettingsView() {
 
           {/* Offline */}
           <div className="space-y-2">
-            <label htmlFor="offline_after_seconds" className="block text-sm font-medium text-slate-900">
+            <label htmlFor="offline_after_seconds" className="flex items-center gap-1.5 text-sm font-medium text-slate-900">
               Mark as Offline after
+              <span className="relative group">
+                <HelpCircle className="w-3.5 h-3.5 text-slate-400 cursor-help" />
+                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-2 rounded-lg bg-slate-900 text-[11px] text-white leading-relaxed shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-20">
+                  Mark a student offline if they lose connection or leave. Default: 90s (Range: 60–600s).
+                </span>
+              </span>
             </label>
             <div className="relative rounded-xl shadow-xs">
               <input
@@ -412,20 +410,14 @@ export default function SettingsView() {
                 step="1"
                 value={formValues.offline_after_seconds}
                 onChange={handleInputChange('offline_after_seconds')}
-                className={`w-full rounded-xl py-2.5 px-3.5 text-sm border font-mono bg-white ${
+                className={`w-full rounded-xl py-2.5 px-3.5 text-sm font-sans tabular-nums bg-white outline-none transition-all ${
                   validation.errors.offline_after_seconds
-                    ? 'border-rose-300 text-rose-900 focus:ring-rose-500 focus:border-rose-500 bg-rose-50/20'
-                    : 'border-slate-300 text-slate-900 focus:ring-red-500 focus:border-red-500'
+                    ? 'border border-rose-300 text-rose-900 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 bg-rose-50/20'
+                    : 'border border-slate-200 text-slate-900 focus:border-slate-400 focus:ring-2 focus:ring-slate-100 hover:border-slate-300'
                 }`}
                 placeholder="90"
               />
-              <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-xs text-slate-400">
-                seconds silent
-              </div>
             </div>
-            <p className="text-xs text-slate-500">
-              Seconds without heartbeat signal (60–600s, never &lt;60s). Default: 90s.
-            </p>
             {validation.errors.offline_after_seconds && (
               <p className="text-xs text-rose-600 flex items-center gap-1 font-medium">
                 <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
@@ -441,45 +433,12 @@ export default function SettingsView() {
         {/* How statuses are decided */}
         <div className="bg-slate-50/40 border border-slate-200 rounded-2xl p-6 shadow-xs flex flex-col justify-between">
           <div>
-            <div className="flex items-center gap-2 mb-3">
-              <Info className="w-4 h-4 text-red-600" />
-              <h3 className="text-sm font-semibold text-slate-900">How statuses are decided</h3>
-            </div>
+            <h3 className="text-sm font-semibold text-slate-900 mb-3">How statuses are decided</h3>
             <p className="text-xs text-slate-500 mb-4">
               Evaluated strictly in priority order: <strong className="text-slate-700">Offline &gt; Distracted &gt; Idle &gt; Active</strong>. Updates in real-time as you adjust values above:
             </p>
 
             <ul className="space-y-3">
-              <li className="flex items-start gap-2.5 p-3 rounded-xl bg-rose-50/60 border border-rose-100 text-xs">
-                <span className="w-2 h-2 rounded-full bg-rose-500 mt-1 shrink-0" />
-                <div>
-                  <span className="font-semibold text-rose-900">Offline</span>
-                  <p className="text-rose-700 mt-0.5">
-                    No signal received for more than <strong className="font-mono">{offlineDisplay}</strong>, or the Google Meet tab has been closed.
-                  </p>
-                </div>
-              </li>
-
-              <li className="flex items-start gap-2.5 p-3 rounded-xl bg-amber-50/60 border border-amber-100 text-xs">
-                <span className="w-2 h-2 rounded-full bg-amber-500 mt-1 shrink-0" />
-                <div>
-                  <span className="font-semibold text-amber-900">Distracted</span>
-                  <p className="text-amber-700 mt-0.5">
-                    Meet tab is open, but student has switched to another tab or application for more than <strong className="font-mono">{distractedDisplay}</strong>.
-                  </p>
-                </div>
-              </li>
-
-              <li className="flex items-start gap-2.5 p-3 rounded-xl bg-white border border-slate-200 text-xs shadow-2xs">
-                <span className="w-2 h-2 rounded-full bg-slate-500 mt-1 shrink-0" />
-                <div>
-                  <span className="font-semibold text-slate-900">Idle (No input)</span>
-                  <p className="text-slate-600 mt-0.5">
-                    No keyboard or mouse activity detected for more than <strong className="font-mono">{idleDisplay}</strong> (passive listener).
-                  </p>
-                </div>
-              </li>
-
               <li className="flex items-start gap-2.5 p-3 rounded-xl bg-emerald-50/60 border border-emerald-100 text-xs">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 mt-1 shrink-0" />
                 <div>
@@ -489,90 +448,106 @@ export default function SettingsView() {
                   </p>
                 </div>
               </li>
-            </ul>
-          </div>
 
-          <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-400">
-            Note: Not Joined entries belong to the class roster before the student claims their name.
+              <li className="flex items-start gap-2.5 p-3 rounded-xl bg-amber-50/60 border border-amber-100 text-xs">
+                <span className="w-2 h-2 rounded-full bg-amber-500 mt-1 shrink-0" />
+                <div>
+                  <span className="font-semibold text-amber-900">Distracted</span>
+                  <p className="text-amber-700 mt-0.5">
+                    Meet tab is open, but student has switched to another tab or application for more than <strong className="font-sans tabular-nums">{distractedDisplay}</strong>.
+                  </p>
+                </div>
+              </li>
+
+              <li className="flex items-start gap-2.5 p-3 rounded-xl bg-white border border-slate-200 text-xs shadow-2xs">
+                <span className="w-2 h-2 rounded-full bg-slate-500 mt-1 shrink-0" />
+                <div>
+                  <span className="font-semibold text-slate-900">Idle (No input)</span>
+                  <p className="text-slate-600 mt-0.5">
+                    No keyboard or mouse activity detected for more than <strong className="font-sans tabular-nums">{idleDisplay}</strong> (passive listener).
+                  </p>
+                </div>
+              </li>
+
+              <li className="flex items-start gap-2.5 p-3 rounded-xl bg-rose-50/60 border border-rose-100 text-xs">
+                <span className="w-2 h-2 rounded-full bg-rose-500 mt-1 shrink-0" />
+                <div>
+                  <span className="font-semibold text-rose-900">Offline</span>
+                  <p className="text-rose-700 mt-0.5">
+                    No signal received for more than <strong className="font-sans tabular-nums">{offlineDisplay}</strong>, or the Google Meet tab has been closed.
+                  </p>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
 
         {/* Live Preview Comparison */}
-        <div className="bg-slate-50/40 border border-slate-200 rounded-2xl p-6 shadow-xs flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <Eye className="w-4 h-4 text-red-600" />
-                <h3 className="text-sm font-semibold text-slate-900">Live Status Preview</h3>
-              </div>
-              <span className="text-xs text-slate-500 flex items-center gap-1 font-medium">
-                <Users className="w-3.5 h-3.5 text-slate-400" />
-                {previewComparison.totalParticipants} joined students
-              </span>
-            </div>
-
-            <p className="text-xs text-slate-500 mb-4">
-              Comparing student distribution under currently saved thresholds versus your unsaved values:
-            </p>
-
-            <div className="space-y-3">
-              {previewComparison.statuses.map((statusKey) => {
-                const meta = STATUS_META[statusKey];
-                const savedCount = previewComparison.currentCounts[statusKey] || 0;
-                const previewCount = previewComparison.previewCounts[statusKey] || 0;
-                const diff = previewCount - savedCount;
-
-                return (
-                  <div
-                    key={statusKey}
-                    className="flex items-center justify-between p-3.5 rounded-xl border border-slate-200/80 bg-white shadow-2xs"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className={`inline-flex items-center justify-center w-6 h-6 rounded-md text-xs font-bold border ${meta.classes}`}>
-                        {meta.icon}
-                      </span>
-                      <span className="text-xs font-semibold text-slate-800">
-                        {meta.label}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <div className="text-right">
-                        <span className="text-xs text-slate-400 mr-1">Saved:</span>
-                        <span className="text-xs font-semibold text-slate-600">{savedCount}</span>
-                      </div>
-
-                      <span className="text-slate-300">→</span>
-
-                      <div className="text-right min-w-[70px]">
-                        <span className="text-xs text-red-600 font-semibold">{previewCount}</span>
-                        {isDirty && diff !== 0 && (
-                          <span
-                            className={`ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded ${
-                              diff > 0
-                                ? 'bg-amber-100 text-amber-800'
-                                : 'bg-red-100 text-red-800'
-                            }`}
-                          >
-                            {diff > 0 ? `+${diff}` : `${diff}`}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+        <div className="bg-slate-50/40 border border-slate-200 rounded-2xl p-6 shadow-xs flex flex-col h-full">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold text-slate-900">Live Status Preview</h3>
+            <span className="text-xs text-slate-500 flex items-center gap-1 font-medium">
+              <Users className="w-3.5 h-3.5 text-slate-400" />
+              {previewComparison.totalParticipants} joined students
+            </span>
           </div>
 
-          {previewComparison.totalParticipants === 0 ? (
+          <p className="text-xs text-slate-500 mb-4">
+            Comparing student distribution under currently saved thresholds versus your unsaved values:
+          </p>
+
+          <div className="flex-1 flex flex-col justify-between gap-3">
+            {previewComparison.statuses.map((statusKey) => {
+              const meta = STATUS_META[statusKey];
+              const savedCount = previewComparison.currentCounts[statusKey] || 0;
+              const previewCount = previewComparison.previewCounts[statusKey] || 0;
+              const diff = previewCount - savedCount;
+
+              return (
+                <div
+                  key={statusKey}
+                  className="flex-1 flex items-center justify-between p-3.5 rounded-xl border border-slate-200/80 bg-white shadow-2xs"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className={`inline-flex items-center justify-center w-6 h-6 rounded-md text-xs font-bold border ${meta.classes}`}>
+                      {meta.icon}
+                    </span>
+                    <span className="text-xs font-semibold text-slate-800 font-sans">
+                      {meta.label}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <div className="text-right">
+                      <span className="text-xs text-slate-400 mr-1">Saved:</span>
+                      <span className="text-xs font-semibold text-slate-600 font-sans tabular-nums">{savedCount}</span>
+                    </div>
+
+                    <span className="text-slate-300">→</span>
+
+                    <div className="text-right min-w-[70px]">
+                      <span className="text-xs text-red-600 font-semibold font-sans tabular-nums">{previewCount}</span>
+                      {isDirty && diff !== 0 && (
+                        <span
+                          className={`ml-1.5 text-[10px] font-bold font-sans tabular-nums px-1.5 py-0.5 rounded ${
+                            diff > 0
+                              ? 'bg-amber-100 text-amber-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}
+                        >
+                          {diff > 0 ? `+${diff}` : `${diff}`}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {previewComparison.totalParticipants === 0 && (
             <div className="mt-4 p-4 rounded-xl bg-white border border-dashed border-slate-200 text-center text-xs text-slate-500">
               No students have joined this session yet. Start the simulator or have students connect to view live shifts.
-            </div>
-          ) : (
-            <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-400 flex items-center justify-between">
-              <span>Preview updates automatically as values change.</span>
-              {isDirty && <span className="text-amber-600 font-medium">Unsaved shifts shown above</span>}
             </div>
           )}
         </div>

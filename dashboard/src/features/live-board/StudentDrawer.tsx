@@ -1,9 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSessionContext } from '../../app/SessionContext';
 import { supabase } from '../../lib/supabase';
-import { STATUS_META, type Status } from '../../lib/status';
+import { STATUS_META } from '../../lib/status';
 import { formatTimeAgo } from '../../lib/format';
 import type { BoardRow } from '../../lib/board';
+import ActivityTimeline from './ActivityTimeline';
+
+export { default as ActivityTimeline } from './ActivityTimeline';
 
 type StudentDrawerProps = {
   row: BoardRow;
@@ -82,6 +85,18 @@ export default function StudentDrawer({ row, onClose }: StudentDrawerProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
+  // Prevent body scrolling while drawer is open
+  useEffect(() => {
+    document.body.classList.add('overflow-hidden');
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
+
   // Focus the drawer on mount
   useEffect(() => {
     drawerRef.current?.focus();
@@ -92,14 +107,22 @@ export default function StudentDrawer({ row, onClose }: StudentDrawerProps) {
     if (!row.participant) return;
 
     async function fetchHeartbeats() {
-      const referenceMs = session?.ended_at ? new Date(session.ended_at).getTime() : Date.now();
-      const thirtyMinsAgo = new Date(referenceMs - 30 * 60 * 1000).toISOString();
-      const { data, error } = await supabase
+      if (!row.participant) return;
+
+      let query = supabase
         .from('heartbeats')
         .select('*')
-        .eq('participant_id', row.participant!.id)
-        .gte('created_at', thirtyMinsAgo)
+        .eq('participant_id', row.participant.id)
         .order('created_at', { ascending: true });
+
+      if (session?.started_at) {
+        query = query.gte('created_at', session.started_at);
+      }
+      if (session?.ended_at) {
+        query = query.lte('created_at', session.ended_at);
+      }
+
+      const { data, error } = await query.limit(2000);
 
       if (!error && data) {
         setHeartbeats(data);
@@ -112,15 +135,14 @@ export default function StudentDrawer({ row, onClose }: StudentDrawerProps) {
     
     const interval = setInterval(fetchHeartbeats, 15000);
     return () => clearInterval(interval);
-  }, [row.participant, session?.ended_at]);
+  }, [row.participant, session?.started_at, session?.ended_at]);
 
   const meta = STATUS_META[row.status];
 
   return (
     <>
       <div 
-        className={`fixed inset-0 z-40 transition-all duration-500 ${isOpen ? 'opacity-100 backdrop-blur-[3px]' : 'opacity-0 backdrop-blur-none pointer-events-none'}`} 
-        style={{ backgroundColor: 'rgba(15, 23, 42, 0.45)' }}
+        className={`fixed inset-0 z-40 bg-slate-900/30 backdrop-blur-sm w-screen h-screen transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} 
         onClick={handleClose} 
         aria-hidden="true" 
       />
@@ -187,55 +209,15 @@ export default function StudentDrawer({ row, onClose }: StudentDrawerProps) {
                 </div>
               </div>
 
-              {/* Timeline Strip */}
-              <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4 hover:border-slate-300 transition-colors">
-                <h3 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-4">30-Min Activity</h3>
-                {isLoading ? (
-                  <div className="w-full h-10 rounded-xl bg-slate-100 animate-pulse border border-slate-200"></div>
-                ) : heartbeats.length === 0 ? (
-                  <div className="text-sm text-slate-500 font-medium bg-slate-50 p-4 rounded-xl text-center border border-slate-200 border-dashed">
-                    No activity recorded in the last 30 minutes.
-                  </div>
-                ) : (
-                  <>
-                    <div className="flex w-full h-10 gap-0.5 rounded-xl overflow-hidden bg-slate-50 border border-slate-200/60 shadow-inner p-1">
-                      {heartbeats.map((hb) => {
-                        let status: Status = 'active';
-                        if (!hb.meet_tab_open) status = 'offline';
-                        else if (!hb.meet_tab_focused) status = 'distracted';
-                        else if (hb.system_state === 'idle' || hb.system_state === 'locked') status = 'idle';
-
-                        let bgColor = 'bg-slate-300';
-                        if (status === 'active') bgColor = 'bg-emerald-500';
-                        if (status === 'distracted') bgColor = 'bg-amber-500';
-                        if (status === 'idle') bgColor = 'bg-slate-400';
-                        if (status === 'offline') bgColor = 'bg-rose-500';
-
-                        return (
-                          <div 
-                            key={hb.id} 
-                            className={`flex-1 ${bgColor} rounded-xs opacity-90 hover:opacity-100 hover:scale-y-110 transition-all cursor-pointer`}
-                            title={`${new Date(hb.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${STATUS_META[status].label}`} 
-                          />
-                        );
-                      })}
-                    </div>
-                    {/* Timeline Markers */}
-                    <div className="flex justify-between text-[11px] font-semibold text-slate-400 mt-2 px-1 tracking-wide">
-                      <span>-30m</span>
-                      <span>-15m</span>
-                      <span>Now</span>
-                    </div>
-                    {/* Legend */}
-                    <div className="flex flex-wrap gap-4 text-xs font-medium mt-5 justify-center bg-slate-50/80 rounded-xl p-3 border border-slate-100 text-slate-600">
-                      <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald-500"></div> Active</div>
-                      <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-amber-500"></div> Distracted</div>
-                      <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-slate-400"></div> Idle</div>
-                      <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-rose-500"></div> Offline</div>
-                    </div>
-                  </>
-                )}
-              </div>
+              {/* Activity Timeline */}
+              <ActivityTimeline
+                heartbeats={heartbeats}
+                isLoading={isLoading}
+                participant={row.participant}
+                fallbackStatus={row.status}
+                session={session}
+                now={now}
+              />
             </div>
           )}
         </div>

@@ -60,36 +60,31 @@ export default function Report() {
 
   // Always-visible banner — shown in every render path so Refresh is never hidden.
   const statusBanner = (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl border bg-white shadow-xs">
-      <div className="flex items-center gap-3">
-        <span className="flex h-3 w-3 relative">
-          {isLive ? (
-            <>
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500" />
-            </>
-          ) : (
-            <span className="inline-flex rounded-full h-3 w-3 bg-gray-400" />
-          )}
-        </span>
-        <div>
-          <h2 className="text-base font-bold text-gray-900">
-            {isLive ? 'Live Session Report' : 'Final Session Report'}
-          </h2>
-          <p className="text-xs text-gray-500">
-            {isLive
-              ? 'Live session: numbers will keep changing as students interact.'
-              : 'This session has ended. All attendance values and engagement metrics are finalized.'}
-          </p>
-        </div>
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200">
+      <div>
+        <h2 className="text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+          <BarChart3 className="w-5 h-5 text-red-600" />
+          {isLive ? 'Live Session Report' : 'Final Session Report'}
+        </h2>
+        <p className="text-xs sm:text-sm text-slate-500 mt-1">
+          {isLive
+            ? 'View real-time attendance and engagement analytics for this class session.'
+            : 'This session has ended. All attendance values and engagement metrics are finalized.'}
+        </p>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
+        {isLive && (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            Live
+          </span>
+        )}
         {error && <span className="text-xs text-rose-500 font-medium">Refresh failed</span>}
         <button
           onClick={fetchReport}
           disabled={loading}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
         >
           <RotateCw className={`w-3.5 h-3.5 text-slate-500 ${loading ? 'animate-spin' : ''}`} />
           <span>{loading ? 'Refreshing…' : 'Refresh'}</span>
@@ -104,7 +99,7 @@ export default function Report() {
             downloadCsv(csv, filename);
           }}
           disabled={rows.length === 0}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-xs transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 shadow-xs transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
         >
           <Download className="w-3.5 h-3.5 text-slate-500" />
           <span>Export CSV</span>
@@ -168,19 +163,19 @@ export default function Report() {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-xs">
           <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Joined</span>
-          <div className="text-2xl font-black text-gray-900 mt-1">{summary.studentsJoined}</div>
+          <div className="text-2xl font-black text-gray-900 mt-1 font-sans tabular-nums">{summary.studentsJoined}</div>
           <span className="text-xs text-gray-400">of {summary.totalStudents} expected</span>
         </div>
 
         <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-xs">
           <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Absent</span>
-          <div className="text-2xl font-black text-gray-600 mt-1">{summary.studentsNotJoined}</div>
+          <div className="text-2xl font-black text-gray-600 mt-1 font-sans tabular-nums">{summary.studentsNotJoined}</div>
           <span className="text-xs text-gray-400">did not join</span>
         </div>
 
         <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-xs">
           <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Avg Attendance</span>
-          <div className="text-2xl font-black text-[#E11D2E] mt-1">
+          <div className="text-2xl font-black text-[#E11D2E] mt-1 font-sans tabular-nums">
             {formatPercentage(summary.avgAttendancePct)}
           </div>
           <span className="text-xs text-gray-400">across whole roster</span>
@@ -188,7 +183,7 @@ export default function Report() {
 
         <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-xs">
           <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Avg Active</span>
-          <div className="text-2xl font-black text-emerald-600 mt-1">
+          <div className="text-2xl font-black text-emerald-600 mt-1 font-sans tabular-nums">
             {formatPercentage(summary.avgActivePct)}
           </div>
           <span className="text-xs text-gray-400">engaged tracking</span>
@@ -196,7 +191,7 @@ export default function Report() {
 
         <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-xs col-span-2 md:col-span-1">
           <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Check-in Rate</span>
-          <div className="text-2xl font-black text-[#111827] mt-1">
+          <div className="text-2xl font-black text-[#111827] mt-1 font-sans tabular-nums">
             {formatPercentage(summary.checkinResponseRatePct)}
           </div>
           <span className="text-xs text-gray-400">response rate</span>
