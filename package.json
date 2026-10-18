@@ -2,6 +2,7 @@
   "name": "classpulse",
   "private": true,
   "scripts": {
-    "simulate": "node scripts/simulate.mjs"
+    "simulate": "node scripts/simulate.mjs",
+    "package:zip": "node scripts/package-extension.mjs"
   }
 }
