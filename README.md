@@ -9,7 +9,7 @@
 <p align="center">
   <a href="https://useclasspulse.vercel.app"><strong>🌐 Live Dashboard</strong></a>
   &nbsp;&nbsp;·&nbsp;&nbsp;
-  <a href="./classpulse-extension.zip"><strong>📦 Download Chrome Extension</strong></a>
+  <a href="https://github.com/kurtscp/ClassPulse/releases/latest"><strong>📦 Download Chrome Extension</strong></a>
 </p>
 
 ---
@@ -18,17 +18,17 @@
 
 > For students and instructors who just want to use ClassPulse. No code required.
 
-1. **Download** [`classpulse-extension.zip`](./classpulse-extension.zip) from the root of this repository and extract it to a folder on your computer.
+1. **Download** [`classpulse-extension.zip`](https://github.com/kurtscp/ClassPulse/releases/latest) from the [GitHub Releases](https://github.com/kurtscp/ClassPulse/releases/latest) page and extract it to a folder on your computer.
 
 2. Open Chrome and go to `chrome://extensions`.
 
 3. Enable **Developer mode** using the toggle in the top-right corner.
 
-4. Click **Load unpacked** and select the extracted `classpulse-extension` folder.
+4. Click **Load unpacked** and select the extracted folder.
 
 The ClassPulse icon will appear in your Chrome toolbar. Enter your class code to begin tracking.
 
-> **Keep version updated:** return to `chrome://extensions` and click the **↺ Reload** button on the ClassPulse card to apply the latest changes.
+> **Updating:** Download the new `.zip` from the [Releases page](https://github.com/kurtscp/ClassPulse/releases/latest), overwrite your local folder, then click the reload icon on the ClassPulse card in `chrome://extensions`. Chrome reads unpacked extensions from local disk and cannot sync with GitHub automatically.
 
 ---
 ## What is ClassPulse

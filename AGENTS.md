@@ -13,3 +13,11 @@ A Chrome extension (Manifest V3, plain JavaScript) sends heartbeats about Google
 6. Dashboard is TypeScript strict. No `any`. Keep components small.
 7. Work in small increments. Before finishing a task run lint, build and tests, then explain what changed and how to test it.
 8. If a task seems to require changing a shared file or a contract, stop and tell me instead of changing it.
+
+## Release Versioning
+9. Releases are triggered ONLY upon completion of a fully tested milestone—never on everyday commits. A milestone is complete when all its linked issues are closed, lint/build/tests pass, and Kurt approves.
+10. The entire monorepo follows Semantic Versioning: `vMAJOR.MINOR.PATCH`. Bump MAJOR for breaking changes, MINOR for new features, PATCH for bug-fixes. Tag the monorepo root—do not version sub-packages independently.
+11. Every release MUST be created with the GitHub CLI: `gh release create v<MAJOR.MINOR.PATCH> [assets…] --generate-notes`. Do not draft releases manually or skip `--generate-notes`.
+12. If any file under `extension/` was modified since the last release, the release checklist MUST include: (a) rebuild the unpacked extension, (b) zip it as `classpulse-extension.zip`, and (c) attach the zip as a release asset. Never publish without verifying this.
+
+See `docs/RELEASE.md` for the full release checklist and worked examples.

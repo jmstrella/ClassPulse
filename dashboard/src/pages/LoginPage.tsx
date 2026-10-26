@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { Zap, CheckCircle, BarChart3 } from 'lucide-react';
+import { Zap, CheckCircle, BarChart3, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../app/AuthProvider';
 
 const FEATURES = [
@@ -16,6 +16,8 @@ export default function LoginPage() {
   const [password, setPassword]   = useState('');
   const [loading, setLoading]     = useState(false);
   const [error, setError]         = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   if (authLoading) return (
     <div className="min-h-screen w-full flex items-center justify-center bg-slate-50">
@@ -32,6 +34,7 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setIsSuccess(false);
 
     const { error: authError } = isSignUp
       ? await signUp(email, password)
@@ -40,7 +43,8 @@ export default function LoginPage() {
     if (authError) {
       setError(authError.message);
     } else if (isSignUp) {
-      setError('Success! If email confirmations are on, check your inbox.');
+      setIsSuccess(true);
+      setError('Check email to confirm address.');
     }
 
     setLoading(false);
@@ -105,15 +109,6 @@ export default function LoginPage() {
           {/* Card */}
           <div className="bg-white border border-slate-200 rounded-2xl shadow-xl p-8">
 
-            {error && (
-              <div className={`p-3 mb-6 rounded-lg text-sm font-medium border ${
-                error.startsWith('Success')
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                  : 'bg-rose-50 text-rose-700 border-rose-200'
-              }`}>
-                {error}
-              </div>
-            )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
 
@@ -130,22 +125,46 @@ export default function LoginPage() {
                   onChange={e => setEmail(e.target.value)}
                   className="w-full border border-slate-300 px-3.5 py-2.5 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#E11D2E] focus:ring-2 focus:ring-[#E11D2E]/10 transition-all"
                 />
+                <p className="mt-1 text-xs text-slate-400">Must be a valid address containing "@".</p>
               </div>
 
               <div>
                 <label className="block text-xs font-semibold tracking-wider text-slate-500 uppercase mb-1.5">
                   Password
                 </label>
-                <input
-                  type="password"
-                  required
-                  placeholder="••••••••"
-                  autoComplete={isSignUp ? 'new-password' : 'current-password'}
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  className="w-full border border-slate-300 px-3.5 py-2.5 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#E11D2E] focus:ring-2 focus:ring-[#E11D2E]/10 transition-all"
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    placeholder="••••••••"
+                    autoComplete={isSignUp ? 'new-password' : 'current-password'}
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    className="w-full border border-slate-300 px-3.5 py-2.5 pr-10 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#E11D2E] focus:ring-2 focus:ring-[#E11D2E]/10 transition-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(prev => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword
+                      ? <EyeOff className="w-4 h-4" strokeWidth={2} />
+                      : <Eye className="w-4 h-4" strokeWidth={2} />}
+                  </button>
+                </div>
+                <p className="mt-1 text-xs text-slate-400">Must be at least 6 characters long.</p>
               </div>
+
+              {error && (
+                <div className={`p-3 my-4 rounded-lg text-sm font-medium border ${
+                  isSuccess
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                    : 'bg-rose-50 text-rose-700 border-rose-200'
+                }`}>
+                  {error}
+                </div>
+              )}
 
               <button
                 type="submit"

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confirm Your ClassPulse Account</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f1f5f9; font-family:'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;">
+
+  <!-- Outer wrapper -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f1f5f9;">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+
+        <!-- Inner card -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px; background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+
+          <!-- Header bar -->
+          <tr>
+            <td style="background-color:#E32636; padding:28px 32px; text-align:center;">
+              <h1 style="margin:0; font-size:22px; font-weight:700; color:#ffffff; letter-spacing:0.5px;">
+                ClassPulse
+              </h1>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:36px 32px 28px 32px;">
+              <h2 style="margin:0 0 8px 0; font-size:20px; font-weight:700; color:#0f172a;">
+                Verify your email address
+              </h2>
+              <p style="margin:0 0 24px 0; font-size:15px; line-height:1.6; color:#475569;">
+                Thank you for creating a ClassPulse account. To complete your
+                registration and start tracking student engagement, please
+                confirm your email address by clicking the button below.
+              </p>
+
+              <!-- CTA Button -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+                <tr>
+                  <td align="center" style="border-radius:8px; background-color:#E32636;">
+                    <a href="{{ .ConfirmationURL }}"
+                       target="_blank"
+                       style="display:inline-block; padding:14px 36px; font-size:15px; font-weight:600; color:#ffffff; text-decoration:none; border-radius:8px; mso-padding-alt:0;">
+                      Confirm My Account
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:28px 0 0 0; font-size:13px; line-height:1.6; color:#94a3b8;">
+                If the button above doesn't work, copy and paste the following
+                URL into your browser:
+              </p>
+              <p style="margin:6px 0 0 0; font-size:13px; line-height:1.5; word-break:break-all; color:#E32636;">
+                {{ .ConfirmationURL }}
+              </p>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td style="padding:0 32px;">
+              <hr style="border:none; border-top:1px solid #e2e8f0; margin:0;" />
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:24px 32px 28px 32px; text-align:center;">
+              <p style="margin:0 0 4px 0; font-size:12px; color:#94a3b8; line-height:1.5;">
+                You received this email because an account was created on ClassPulse
+                with this address. If you did not sign up, you can safely ignore this message.
+              </p>
+              <p style="margin:8px 0 0 0; font-size:12px; color:#cbd5e1;">
+                &copy; {{ now.Format "2006" }} ClassPulse &mdash; Real-time student engagement tracking.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+        <!-- /Inner card -->
+
+      </td>
+    </tr>
+  </table>
+  <!-- /Outer wrapper -->
+
+</body>
+</html>
